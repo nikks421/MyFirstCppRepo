@@ -7,25 +7,25 @@ double distance(const Point& p1, const Point& p2) {
     return hypot(p2.x - p1.x, p2.y - p1.y);
 }
 
+double crossProduct(const Point& O, const Point& A, const Point& B) {
+    return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
+}
+
 double heronArea(const Triangle& t) {
     double a = distance(t.A, t.B);
     double b = distance(t.B, t.C);
     double c = distance(t.C, t.A);
     double s = (a + b + c) / 2;
     double underSqrt = s * (s - a) * (s - b) * (s - c);
-
-    if (underSqrt < 0 && underSqrt > -1e-12) {
-        return 0.0;
-    }
     return sqrt(underSqrt);
 }
 
 double Triangle::area() const {
-    return 0.5 * fabs((B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y));
+    return 0.5 * fabs(crossProduct(A, B, C));
 }
 
 bool Triangle::isDegenerate() const {
-    return area() < 1e-12;
+    return fabs(crossProduct(A, B, C)) < 1e-12;
 }
 
 bool Triangle::containsAreaMethod(const Point& P) const {
@@ -33,9 +33,10 @@ bool Triangle::containsAreaMethod(const Point& P) const {
         return isOnSegment(A, B, P) || isOnSegment(B, C, P) || isOnSegment(C, A, P);
     }
 
-    if ((fabs(P.x - A.x) < 1e-12 && fabs(P.y - A.y) < 1e-12) ||
-        (fabs(P.x - B.x) < 1e-12 && fabs(P.y - B.y) < 1e-12) ||
-        (fabs(P.x - C.x) < 1e-12 && fabs(P.y - C.y) < 1e-12)) {
+    double eps = 1e-12;
+    if ((fabs(P.x - A.x) < eps && fabs(P.y - A.y) < eps) ||
+        (fabs(P.x - B.x) < eps && fabs(P.y - B.y) < eps) ||
+        (fabs(P.x - C.x) < eps && fabs(P.y - C.y) < eps)) {
         return true;
     }
 
@@ -45,7 +46,6 @@ bool Triangle::containsAreaMethod(const Point& P) const {
 
     double S_main = area();
     double S_sum = heronArea({ A, B, P }) + heronArea({ B, C, P }) + heronArea({ C, A, P });
-
     return fabs(S_main - S_sum) <= 1e-10;
 }
 
@@ -54,13 +54,9 @@ bool Triangle::containsVectorProduct(const Point& P) const {
         return isOnSegment(A, B, P) || isOnSegment(B, C, P) || isOnSegment(C, A, P);
     }
 
-    auto cross_product = [](const Point& a, const Point& b, const Point& c) {
-        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-        };
-
-    double cp1 = cross_product(A, B, P);
-    double cp2 = cross_product(B, C, P);
-    double cp3 = cross_product(C, A, P);
+    double cp1 = crossProduct(A, B, P);
+    double cp2 = crossProduct(B, C, P);
+    double cp3 = crossProduct(C, A, P);
 
     double eps = 1e-12;
     bool hasNeg = (cp1 < -eps) || (cp2 < -eps) || (cp3 < -eps);
@@ -69,11 +65,11 @@ bool Triangle::containsVectorProduct(const Point& P) const {
 }
 
 bool isOnSegment(const Point& A, const Point& B, const Point& P) {
-    double cross = (P.x - A.x) * (B.y - A.y) - (P.y - A.y) * (B.x - A.x);
-    if (fabs(cross) > 1e-12) return false;
+    if (fabs(crossProduct(A, P, B)) > 1e-12) return false;
 
-    if ((P.x >= A.x - 1e-12 && P.x <= B.x + 1e-12) || (P.x >= B.x - 1e-12 && P.x <= A.x + 1e-12)) {
-        if ((P.y >= A.y - 1e-12 && P.y <= B.y + 1e-12) || (P.y >= B.y - 1e-12 && P.y <= A.y + 1e-12)) {
+    double eps = 1e-12;
+    if ((P.x >= A.x - eps && P.x <= B.x + eps) || (P.x >= B.x - eps && P.x <= A.x + eps)) {
+        if ((P.y >= A.y - eps && P.y <= B.y + eps) || (P.y >= B.y - eps && P.y <= A.y + eps)) {
             return true;
         }
     }
@@ -108,12 +104,11 @@ void describePosition(const Triangle& t, const Point& P) {
         cout << "Точка лежить на стороні CA" << endl;
         return;
     }
-    if (t.containsAreaMethod(P)) {
+
+    if (t.containsAreaMethod(P))
         cout << "Точка всередині трикутника" << endl;
-    }
-    else {
+    else
         cout << "Точка поза трикутником" << endl;
-    }
 }
 
 void process() {
@@ -132,19 +127,16 @@ void process() {
     cout << "Площа = " << t.area() << endl;
 
     bool degenerate = t.isDegenerate();
-
-    if (degenerate) {
+    if (degenerate)
         cout << "\nТрикутник вироджений (площа = 0)!" << endl;
-    }
-    else {
+    else
         cout << "\nТрикутник не вироджений." << endl;
-    }
 
     int numPoints;
     cout << "\nСкільки точок ви хочете перевірити? ";
     cin >> numPoints;
 
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints; ++i) {
         cout << "\nТочка " << i + 1 << endl;
         Point p;
         cout << "Введіть координати точки (x y): ";
@@ -153,21 +145,17 @@ void process() {
         bool resultArea = t.containsAreaMethod(p);
         bool resultVector = t.containsVectorProduct(p);
         cout << "Метод площ:        " << (resultArea ? "точка належить" : "точка не належить") << endl;
-        cout << "Векторний метод:     " << (resultVector ? "точка належить" : "точка не належить") << endl;
-        cout << endl;
+        cout << "Векторний метод:    " << (resultVector ? "точка належить" : "точка не належить") << endl;
 
         if (degenerate) {
-            if (resultArea || resultVector) {
+            if (resultArea || resultVector)
                 cout << "Точка лежить на межі виродженого трикутника" << endl;
-            }
-            else {
+            else
                 cout << "Точка поза виродженим трикутником" << endl;
-            }
         }
         else {
             describePosition(t, p);
         }
     }
-
     cout << "\nПрограма завершена" << endl;
 }
