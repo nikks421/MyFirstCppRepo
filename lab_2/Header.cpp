@@ -124,7 +124,8 @@ void process() {
     cout << "BC = " << distance(t.B, t.C) << endl;
     cout << "CA = " << distance(t.C, t.A) << endl;
     cout << "Периметр = " << (distance(t.A, t.B) + distance(t.B, t.C) + distance(t.C, t.A)) << endl;
-    cout << "Площа = " << t.area() << endl;
+    cout << "Площа(метод векторного добутку)= " << t.area() << endl;
+    cout << "Площа(метод герона)= " << heronArea(t) << endl;
 
     bool degenerate = t.isDegenerate();
     if (degenerate)
