@@ -4,29 +4,6 @@
 #include <cmath>
 using namespace std;
 
-Dyhotomia_class::Dyhotomia_class(void) {
-    a = 0.0;
-    b = 0.0;
-    eps = 0.001;
-}
-
-Dyhotomia_class::Dyhotomia_class(double vol_a, double vol_b, double vol_eps) {
-    a = vol_a;
-    b = vol_b;
-    eps = vol_eps;
-}
-
-Dyhotomia_class::~Dyhotomia_class(void) {}
-
-void Dyhotomia_class::setVolumes(double vol_a, double vol_b) {
-    a = vol_a;
-    b = vol_b;
-}
-
-void Dyhotomia_class::setTolerance(double vol_eps) {
-    eps = vol_eps;
-}
-
 double Dyhotomia_class::function(double x) {
     if (x != 0) {
         return cos(2.0 / x) - 2.0 * sin(1.0 / x) + 1.0 / x;
@@ -39,20 +16,20 @@ double Dyhotomia_class::derivative(double x) {
     return (function(x + dx) - function(x)) / dx;
 }
 
-bool Dyhotomia_class::hasRoot(void) {
+bool Dyhotomia_class::hasRoot(double a, double b) {
     double fa = function(a);
     double fb = function(b);
     return (fa * fb <= 0);
 }
 
-double Dyhotomia_class::solveDichotomy(void) {
+double Dyhotomia_class::solveDichotomy(double a, double b, double eps) {
     double temp_a = a, temp_b = b;
     double fa = function(temp_a);
     double fb = function(temp_b);
     double c, fc;
 
     if (fa * fb > 0) {
-        cout << "Немає кореня на проміжку [" << temp_a << ", " << temp_b << "]." << endl;
+        cout << "No root in the interval [" << temp_a << ", " << temp_b << "]." << endl;
         return 0;
     }
 
@@ -76,61 +53,57 @@ double Dyhotomia_class::solveDichotomy(void) {
     return (temp_a + temp_b) / 2;
 }
 
-double Dyhotomia_class::solveNewton(void) {
-    double x0 = (a + b) / 2;
-    double x1;
+void Dyhotomia_class::solveNewton(double a, double b, double eps) {
+    double x = (a + b) / 2;
     int maxIter = 1000;
+    int iter = 0;
 
-    for (int i = 0; i < maxIter; i++) {
-        double fx = function(x0);
-        double dfx = derivative(x0);
+    while (abs(function(x)) > eps && iter < maxIter) {
+        double dfx = derivative(x);
 
-        if (fabs(dfx) < 1e-12) {
-            cout << "Помилка: похідна близька до нуля!" << endl;
-            return 0;
+        if (abs(dfx) < 1e-12) {
+            cout << "Derivative is zero, stopping" << endl;
+            cout << "Last computed approximation: " << x << endl;
+            return;
         }
 
-        x1 = x0 - fx / dfx;
-
-        if (fabs(x1 - x0) < eps) {
-            return x1;
-        }
-        x0 = x1;
+        x = x - function(x) / dfx;
+        iter++;
     }
 
-    cout << "Попередження: досягнуто максимальну кількість ітерацій" << endl;
-    return x0;
+    if (iter >= maxIter) {
+        cout << "Warning: Maximum number of iterations reached" << endl;
+    }
+
+    cout << "Root: x = " << x << endl;
+    cout << "Function value: f(x) = " << function(x) << endl;
 }
 
 void runLab() {
     double a, b, eps;
-    cout << "Функція: cos(2/x) - 2*sin(1/x) + 1/x" << endl;
+    Dyhotomia_class dyh;
 
-    cout << "\nВведіть ліву межу проміжку a: ";
+    cout << "Function: cos(2/x) - 2*sin(1/x) + 1/x" << endl;
+
+    cout << "\nEnter the left endpoint of the interval a: ";
     cin >> a;
-    cout << "Введіть праву межу проміжку b: ";
+    cout << "Enter the right endpoint of the interval b: ";
     cin >> b;
-    cout << "Введіть точність eps: ";
+    cout << "Enter the precision eps: ";
     cin >> eps;
 
-    Dyhotomia_class* dyh = new Dyhotomia_class(a, b, eps);
-
-    if (!dyh->hasRoot()) {
-        cout << "\nНемає кореня на проміжку [" << a << ", " << b << "]." << endl;
+    if (!dyh.hasRoot(a, b)) {
+        cout << "\nNo root in the interval [" << a << ", " << b << "]." << endl;
     }
     else {
         cout << fixed << setprecision(6);
 
-        double rootDich = dyh->solveDichotomy();
-        cout << "\nМетод Дихотомії" << endl;
-        cout << "Корінь: x = " << rootDich << endl;
-        cout << "Значення функції: f(x) = " << dyh->function(rootDich) << endl;
+        double rootDich = dyh.solveDichotomy(a, b, eps);
+        cout << "\nDyhotomia Method" << endl;
+        cout << "Root: x = " << rootDich << endl;
+        cout << "Function value: f(x) = " << dyh.function(rootDich) << endl;
 
-        double rootNewton = dyh->solveNewton();
-        cout << "\nМетод Ньютона: " << endl;
-        cout << "Корінь: x = " << rootNewton << endl;
-        cout << "Значення функції: f(x) = " << dyh->function(rootNewton) << endl;
+        cout << "\nNewton's Method:" << endl;
+        dyh.solveNewton(a, b, eps);
     }
-
-    delete dyh;
 }
