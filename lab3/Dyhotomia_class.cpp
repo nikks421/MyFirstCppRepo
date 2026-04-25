@@ -1,18 +1,18 @@
 #include "Dyhotomia_class.h"
 #include <iostream>
 #include <iomanip>
-#include <cmath>
+#include <math.h>
 using namespace std;
 
 double Dyhotomia_class::function(double x) {
     if (x != 0) {
-        return cos(2.0 / x) - 2.0 * sin(1.0 / x) + 1.0 / x;
+        return (x * x) / 4.0 + x - 1.2502;
     }
     return 0;
 }
 
 double Dyhotomia_class::derivative(double x) {
-    double dx = 1e-7;
+    double dx = 1e-6;
     return (function(x + dx) - function(x)) / dx;
 }
 
@@ -54,14 +54,14 @@ double Dyhotomia_class::solveDichotomy(double a, double b, double eps) {
 }
 
 void Dyhotomia_class::solveNewton(double a, double b, double eps) {
-    double x = (a + b) / 2;
+    double x = 10000.0;
     int maxIter = 1000;
     int iter = 0;
 
     while (abs(function(x)) > eps && iter < maxIter) {
         double dfx = derivative(x);
 
-        if (abs(dfx) < 1e-12) {
+        if (abs(dfx) < 1e-16) {
             cout << "Derivative is zero, stopping" << endl;
             cout << "Last computed approximation: " << x << endl;
             return;
@@ -77,13 +77,14 @@ void Dyhotomia_class::solveNewton(double a, double b, double eps) {
 
     cout << "Root: x = " << x << endl;
     cout << "Function value: f(x) = " << function(x) << endl;
+    cout << "Iter =" << iter << endl;
 }
 
 void runLab() {
     double a, b, eps;
     Dyhotomia_class dyh;
 
-    cout << "Function: cos(2/x) - 2*sin(1/x) + 1/x" << endl;
+    cout << "Function:x^2/4 + x - 1.2502 " << endl;
 
     cout << "\nEnter the left endpoint of the interval a: ";
     cin >> a;
