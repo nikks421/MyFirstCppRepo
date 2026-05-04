@@ -1,3 +1,7 @@
+#include "Car.h"
+#include "SportCar.h"
+#include "MySportCar.h"
+#include "Motorcycle.h"
 #include "Vehicle.h"
 #include <iostream>
 using namespace std;
@@ -32,6 +36,20 @@ int Vehicle::StartEngine() {
     return 1;
 }
 
+int run() {
+    Vehicle* vehicles[4];
+    vehicles[0] = new Car();
+    vehicles[1] = new SportCar("twin-turbo");
+    vehicles[2] = new MySportCar("electric", "Tesla", "blue");
+    vehicles[3] = new Motorcycle();
 
+    for (int i = 0; i < 4; i++) {
+        vehicles[i]->Move();     
+        vehicles[i]->StartEngine();
+        delete vehicles[i];
+    }
+
+    return 0;
+}
 
 
