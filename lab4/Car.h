@@ -1,12 +1,12 @@
 #pragma once
 #include "Vehicle.h"
-#include <string>
-using namespace std;
 
 class Car : public Vehicle {
 public:
     Car();
+    virtual ~Car();
+
     virtual int Move() override;
-    virtual int ShowInfo()  override;
-    virtual int StartEngine()  override;
+    virtual int ShowInfo() override;
+    virtual int StartEngine() override;
 };

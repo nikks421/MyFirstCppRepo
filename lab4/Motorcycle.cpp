@@ -1,18 +1,18 @@
 #include "Motorcycle.h"
 #include <iostream>
-using namespace std;
 
 Motorcycle::Motorcycle() {
     SetWheels(2);
     SetColor("black");
     SetEngineSound("ring-ring-ring");
-    //ShowInfo();
-    //Move();
-    //StartEngine();
+}
+
+Motorcycle::~Motorcycle() {
+    cout << "Motorcycle destructor called" << std::endl;
 }
 
 int Motorcycle::Move() {
-    cout << "Motorcycle is riding between cars" << endl;
+    cout << "Motorcycle is riding between cars" << std::endl;
     return 1;
 }
 

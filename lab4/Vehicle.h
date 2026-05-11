@@ -3,21 +3,25 @@
 using namespace std;
 
 class Vehicle {
-protected:
+private:
     string color;
     int wheels;
     string engineSound;
-
 public:
     Vehicle();
-    virtual int SetColor(string vehicle_color);
+    virtual ~Vehicle();
+
+    virtual int SetColor(std::string vehicle_color);
     virtual int SetWheels(int number_of_wheels);
-    virtual int SetEngineSound(string sound);
+    virtual int SetEngineSound(std::string sound);
+
+    string GetColor() const;
+    int GetWheels() const;
+    string GetEngineSound() const;
+
     virtual int Move();
     virtual int ShowInfo();
     virtual int StartEngine();
-    virtual ~Vehicle() {}
 };
 
 int run();
-

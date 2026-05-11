@@ -2,15 +2,18 @@
 #include <iostream>
 using namespace std;
 
-MySportCar::MySportCar(string turbo_type, string car_name, string car_color) {
+MySportCar::MySportCar(string turbo_type, string car_name, string car_color)
+    : SportCar()
+{
     SetTurbo(turbo_type);
     SetColor(car_color);
     SetName(car_name);
     SetWheels(4);
     SetEngineSound("RRRRR-VROOM-VROOM-TURBO");
-    //ShowInfo();
-    //Move();
-    //StartEngine();
+}
+
+MySportCar::~MySportCar() {
+    std::cout << "MySportCar destructor called" << std::endl;
 }
 
 int MySportCar::SetName(string car_name) {
@@ -23,27 +26,22 @@ int MySportCar::SetName(int car_name) {
     return 1;
 }
 
-int MySportCar::SetColor(string car_color) {
-    myColor = car_color;
-    Vehicle::SetColor(car_color);
-    return 1;
-}
-
 int MySportCar::Move() {
-    cout << "My sport car \"" << name << "\" flies like a lightning!" << endl;
+    std::cout << "My sport car \"" << name << "\" flies like a lightning!" << std::endl;
     return 1;
 }
 
 int MySportCar::ShowInfo() {
-    cout << "\nMY CAR" << endl;
-    cout << "Name: " << name << endl;
-    cout << "Color: " << myColor << endl;
-    cout << "Turbo: " << turbo << endl;
+    cout << "MY CAR" << std::endl;
+    cout << "  Name:  " << name << std::endl;
+    cout << "  Turbo: " << turbo << std::endl;
+    cout << "  ";
+    Vehicle::ShowInfo();   // виводить color, wheels, engineSound через геттери
     return 1;
 }
 
 int MySportCar::StartEngine() {
-    cout << "My " << name << " with turbo " << turbo << ": ";
+    cout << "My \"" << name << "\" (turbo: " << turbo << "): ";
     Vehicle::StartEngine();
     return 1;
 }
