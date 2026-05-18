@@ -1,10 +1,12 @@
 #include "Car.h"
+#include <iostream>
+using namespace std;
 
 Car::Car() {
-    SetWheels(4);
-    SetColor("white");
-    SetEngineSound("Br-r-r-r-r");
     cout << "Car constructor called" << endl;
+    SetColor("Red");
+    SetWheels(4);
+    SetEngineSound("Vroom");
 }
 
 Car::~Car() {
@@ -17,13 +19,17 @@ int Car::Move() {
 }
 
 int Car::ShowInfo() {
-    cout << "Car: ";
+    cout << "[Car] ";
     Vehicle::ShowInfo();
     return 1;
 }
 
 int Car::StartEngine() {
-    cout << "Car: ";
-    Vehicle::StartEngine();
+    cout << "Car engine started: " << GetEngineSound() << "!" << endl;
+    return 1;
+}
+
+int Car::StartEngine(string mode) {
+    cout << "Car engine started in " << mode << " mode: " << GetEngineSound() << "!" << endl;
     return 1;
 }

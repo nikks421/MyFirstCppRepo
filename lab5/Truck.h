@@ -1,10 +1,10 @@
 #pragma once
 #include "Vehicle.h"
 
-class ElectricCar : virtual public Vehicle {
+class Truck : virtual public Vehicle {
 public:
-    ElectricCar();
-    virtual ~ElectricCar();
+    Truck();
+    virtual ~Truck();
 
     virtual int Move() override;
     virtual int ShowInfo() override;

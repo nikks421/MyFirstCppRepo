@@ -12,9 +12,9 @@ public:
     Vehicle();
     virtual ~Vehicle();
 
-    virtual int SetColor(string vehicle_color);
-    virtual int SetWheels(int number_of_wheels);
-    virtual int SetEngineSound(string sound);
+    int SetColor(string vehicle_color);
+    int SetWheels(int number_of_wheels);
+    int SetEngineSound(string sound);
 
     string GetColor() const;
     int GetWheels() const;
@@ -22,7 +22,8 @@ public:
 
     virtual int Move();
     virtual int ShowInfo();
+    virtual int ShowInfo(string language);
     virtual int StartEngine();
+    virtual int StartEngine(string mode);
 };
-
 int run();

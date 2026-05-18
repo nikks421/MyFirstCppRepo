@@ -1,13 +1,12 @@
 #include "ElectricCar.h"
+#include <iostream>
+using namespace std;
 
-ElectricCar::ElectricCar(string modelName, string carColor, int battery)
-    : Vehicle(), Car(), ElectricVehicle() {
-    model = modelName;
-    SetColor(carColor);
-    SetWheels(4);
-    SetBatteryCapacity(battery);
-    SetEngineSound("electric hummm");
+ElectricCar::ElectricCar() {
     cout << "ElectricCar constructor called" << endl;
+    SetColor("White");
+    SetWheels(4);
+    SetEngineSound("Whirr");
 }
 
 ElectricCar::~ElectricCar() {
@@ -15,20 +14,17 @@ ElectricCar::~ElectricCar() {
 }
 
 int ElectricCar::Move() {
-    cout << "Electric car \"" << model << "\" zooms silently!" << endl;
+    cout << "Electric car moves silently" << endl;
     return 1;
 }
 
 int ElectricCar::ShowInfo() {
-    cout << "ELECTRIC CAR: " << model << endl;
-    cout << "  ";
+    cout << "[ElectricCar] ";
     Vehicle::ShowInfo();
-    cout << "  Battery: " << GetBatteryCapacity() << "%" << endl;
     return 1;
 }
 
 int ElectricCar::StartEngine() {
-    cout << model << ": ";
-    Vehicle::StartEngine();
+    cout << "Electric car engine started: " << GetEngineSound() << "!" << endl;
     return 1;
 }

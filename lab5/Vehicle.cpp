@@ -1,5 +1,9 @@
 #include "Vehicle.h"
-#include "AmphibiousElectricCar.h"
+#include "CarMotorcycleElectricHybrid.h"
+#include "CarTruckHybrid.h"
+#include <iostream>
+using namespace std;
+
 Vehicle::Vehicle() : color("unknown"), wheels(0), engineSound("silence") {
     cout << "Vehicle constructor called" << endl;
 }
@@ -38,24 +42,42 @@ int Vehicle::ShowInfo() {
     return 1;
 }
 
+int Vehicle::ShowInfo(string language) {
+    cout << "VEHICLE INFO (Language: " << language << ")" << endl;
+    cout << "Color: " << color << ", Wheels: " << wheels
+        << ", Engine sound: " << engineSound << endl;
+    return 1;
+}
+
 int Vehicle::StartEngine() {
     cout << "Engine started. Sound: " << engineSound << endl;
     return 1;
 }
 
+int Vehicle::StartEngine(string mode) {
+    cout << "Engine started in " << mode << " mode. Sound: " << engineSound << endl;
+    return 1;
+}
+
 int run() {
-    cout << "\n DEMONSTRATION OF MULTIPLE INHERITANCE \n" << endl;
+    cout << "Constructors" << endl;
+    CarMotorcycleElectricHybrid* vehicle1 = new CarMotorcycleElectricHybrid();
+    vehicle1->ShowInfo();
+    vehicle1->StartEngine();
+    vehicle1->StartEngine("Who started this engine?");
 
-    cout << " Creating an object AmphibiousElectricCar " << endl;
-    AmphibiousElectricCar myCar("AquaTesla 3000", "cyan", 85, 15, "50 km/h");
+    cout << "Destructors" << endl;
+    delete vehicle1;
+    cout << endl;
 
-    cout << "\nCall methods " << endl;
-    myCar.ShowInfo();
-    myCar.Move();
-    myCar.StartEngine();
-    myCar.Swim();
-
-    cout << "\nProgram termination (destructors will be called automatically)" << endl;
-
+    cout << "Constructors" << endl;
+    CarTruckHybrid* vehicle2 = new CarTruckHybrid();
+    vehicle2->ShowInfo();
+    vehicle2->StartEngine();
+    vehicle2->StartEngine("Who started this engine?");
+    cout << "Destructors" << endl;
+    delete vehicle2;
+    cout << endl;
     return 0;
 }
+

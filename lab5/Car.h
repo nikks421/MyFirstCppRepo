@@ -7,6 +7,7 @@ public:
     virtual ~Car();
 
     virtual int Move() override;
-    virtual int ShowInfo() override;
-    virtual int StartEngine() override;
+    virtual int ShowInfo() override; 
+    virtual int StartEngine() override;  
+    int StartEngine(string mode) override;
 };
